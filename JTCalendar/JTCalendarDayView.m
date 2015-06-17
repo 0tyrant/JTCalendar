@@ -229,7 +229,7 @@ static NSString *const kJTCalendarDaySelected = @"kJTCalendarDaySelected";
     }
     else{
         if(!self.isOtherMonth){
-            if(self.date > [NSDate date]) {
+            if([self.date timeIntervalSince1970]  > [[NSDate date]timeIntervalSince1970] ) {
                 textLabel.textColor = [self.calendarManager.calendarAppearance dayTextColorBeyondTody];
             } else {
                 textLabel.textColor = [self.calendarManager.calendarAppearance dayTextColor];
