@@ -255,6 +255,7 @@ static NSString *const kJTCalendarDaySelected = @"kJTCalendarDaySelected";
 - (void)setIsOtherMonth:(BOOL)isOtherMonth
 {
     self->_isOtherMonth = isOtherMonth;
+    self.hidden = isOtherMonth;
     [self setSelected:isSelected animated:NO];
 }
 
