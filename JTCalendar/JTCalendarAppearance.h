@@ -169,6 +169,8 @@ typedef NSString *(^JTCalendarMonthBlock)(NSDate *date, JTCalendar *jt_calendar)
  */
 @property (nonatomic) UIColor *dayTextColorTodayOtherMonth;
 
+@property (nonatomic) UIColor *dayTextColorBeyondTody;
+
 /**
  *	The default value of this property is:
  *	@code [UIFont systemFontOfSize:[UIFont systemFontSize]] @endcode

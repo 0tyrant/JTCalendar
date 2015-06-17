@@ -229,7 +229,11 @@ static NSString *const kJTCalendarDaySelected = @"kJTCalendarDaySelected";
     }
     else{
         if(!self.isOtherMonth){
-            textLabel.textColor = [self.calendarManager.calendarAppearance dayTextColor];
+            if(self.date > [NSDate date]) {
+                textLabel.textColor = [self.calendarManager.calendarAppearance dayTextColorBeyondTody];
+            } else {
+                textLabel.textColor = [self.calendarManager.calendarAppearance dayTextColor];
+            }
             dotView.color = [self.calendarManager.calendarAppearance dayDotColor];
         }
         else{
