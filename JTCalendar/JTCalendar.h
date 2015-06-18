@@ -38,5 +38,6 @@
 - (void)loadNextPage;
 
 - (void)repositionViews;
+- (void)repositionViewsToToday;
 
 @end

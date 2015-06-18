@@ -105,7 +105,7 @@
         NSDateComponents *dayComponent = [NSDateComponents new];
         
         if(!self.calendarManager.calendarAppearance.isWeekMode){
-            dayComponent.month = i - (NUMBER_PAGES_LOADED / 2);
+            dayComponent.month = i - 4;
          
             NSDate *monthDate = [calendar dateByAddingComponents:dayComponent toDate:self.currentDate options:0];
             monthDate = [self beginningOfMonth:monthDate];

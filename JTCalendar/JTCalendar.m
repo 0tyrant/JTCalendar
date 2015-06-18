@@ -186,7 +186,9 @@
         
     NSDate *currentDate = [calendar dateByAddingComponents:dayComponent toDate:self.currentDate options:0];
     
-    [self setCurrentDate:currentDate];
+    if ([currentDate timeIntervalSince1970] <= [[NSDate date] timeIntervalSince1970]) {
+        [self setCurrentDate:currentDate];
+    }
     
     if(!self.calendarAppearance.isWeekMode){
         self.menuMonthsView.scrollEnabled = YES;
@@ -213,6 +215,15 @@
     
     CGFloat menuPageWidth = CGRectGetWidth([self.menuMonthsView.subviews.firstObject frame]);
     self.menuMonthsView.contentOffset = CGPointMake(menuPageWidth * ((NUMBER_PAGES_LOADED / 2)), self.menuMonthsView.contentOffset.y);
+}
+
+-(void)repositionViewsToToday {
+    // Position to the middle page
+    CGFloat pageWidth = CGRectGetWidth(self.contentView.frame);
+    self.contentView.contentOffset = CGPointMake(pageWidth * ((NUMBER_PAGES_LOADED-1)), self.contentView.contentOffset.y);
+    
+    CGFloat menuPageWidth = CGRectGetWidth([self.menuMonthsView.subviews.firstObject frame]);
+    self.menuMonthsView.contentOffset = CGPointMake(menuPageWidth * ((NUMBER_PAGES_LOADED -1)), self.menuMonthsView.contentOffset.y);
 }
 
 - (void)loadNextMonth
