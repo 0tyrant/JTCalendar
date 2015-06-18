@@ -265,10 +265,11 @@ static NSString *const kJTCalendarDaySelected = @"kJTCalendarDaySelected";
 
 - (void)reloadData
 {
-    dotView.hidden = ![self.calendarManager.dataCache haveEvent:self.date];
-    
-    BOOL selected = [self isSameDate:[self.calendarManager currentDateSelected]];
-    [self setSelected:selected animated:NO];
+//    dotView.hidden = ![self.calendarManager.dataCache haveEvent:self.date];
+//    
+//    BOOL selected = [self isSameDate:[self.calendarManager currentDateSelected]];
+//    [self setSelected:selected animated:NO];
+    [self setSelected:![self.calendarManager.dataCache haveEvent:self.date] animated:NO];
 }
 
 - (BOOL)isToday
