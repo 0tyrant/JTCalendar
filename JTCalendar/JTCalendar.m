@@ -12,6 +12,7 @@
 @interface JTCalendar(){
     BOOL cacheLastWeekMode;
     NSUInteger cacheFirstWeekDay;
+    int repositionPage;
 }
 
 @end
@@ -29,6 +30,7 @@
     self->_calendarAppearance = [JTCalendarAppearance new];
     self->_dataCache = [JTCalendarDataCache new];
     self.dataCache.calendarManager = self;
+    repositionPage = NUMBER_PAGES_LOADED / 2;
     
     return self;
 }
@@ -186,8 +188,29 @@
         
     NSDate *currentDate = [calendar dateByAddingComponents:dayComponent toDate:self.currentDate options:0];
     
-    if ([currentDate timeIntervalSince1970] <= [[NSDate date] timeIntervalSince1970]) {
-        [self setCurrentDate:currentDate];
+    if ( [self dateAIsNoEalierThanDateB:[NSDate date] :currentDate]) {
+        NSDateComponents *leftestDayComponent = [NSDateComponents new];
+        leftestDayComponent.month = 4;
+        leftestDayComponent.day = 0;
+        NSDate *currentLeftestDate = [calendar dateByAddingComponents:leftestDayComponent toDate:self.leftestDate options: 0];
+        if ([self dateAIsNoEalierThanDateB:currentDate :currentLeftestDate]) {
+            repositionPage = NUMBER_PAGES_LOADED / 2;
+            [self setCurrentDate:currentDate];
+        } else {
+            dayComponent.month = 1;
+            currentDate = [calendar dateByAddingComponents:dayComponent toDate:currentDate options:0];
+            if ([self isTwoDateInOneMonth:currentDate :currentLeftestDate]) {
+                repositionPage = 1;
+                [self setCurrentDate:currentDate];
+            }
+        }
+    } else {
+        dayComponent.month = -1;
+        currentDate = [calendar dateByAddingComponents:dayComponent toDate:currentDate options:0];
+        if ([self isTwoDateInOneMonth:currentDate :[NSDate date]]) {
+            repositionPage = 3;
+            [self setCurrentDate:currentDate];
+        }
     }
     
     if(!self.calendarAppearance.isWeekMode){
@@ -211,10 +234,10 @@
 {
     // Position to the middle page
     CGFloat pageWidth = CGRectGetWidth(self.contentView.frame);
-    self.contentView.contentOffset = CGPointMake(pageWidth * ((NUMBER_PAGES_LOADED / 2)), self.contentView.contentOffset.y);
+    self.contentView.contentOffset = CGPointMake(pageWidth * (repositionPage), self.contentView.contentOffset.y);
     
     CGFloat menuPageWidth = CGRectGetWidth([self.menuMonthsView.subviews.firstObject frame]);
-    self.menuMonthsView.contentOffset = CGPointMake(menuPageWidth * ((NUMBER_PAGES_LOADED / 2)), self.menuMonthsView.contentOffset.y);
+    self.menuMonthsView.contentOffset = CGPointMake(menuPageWidth * (repositionPage), self.menuMonthsView.contentOffset.y);
 }
 
 -(void)repositionViewsToToday {
@@ -256,4 +279,41 @@
     [self.contentView scrollRectToVisible:frame animated:YES];
 }
 
+-(BOOL)isTwoDateInOneMonth:(NSDate *)dateA :(NSDate *)dateB {
+    if ([self monthForDate:dateA] == [self monthForDate:dateB]) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+-(int)monthForDate:(NSDate *)date {
+    NSCalendar *calendar = [[NSCalendar alloc]initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents *comps = [[NSDateComponents alloc]init];
+    NSInteger unitFlags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitWeekday | NSCalendarUnitHour | NSCalendarUnitMinute;
+    comps = [calendar components:unitFlags fromDate:date];
+    return comps.month;
+}
+
+-(int)yearForDate:(NSDate*)date {
+    NSCalendar *calendar = [[NSCalendar alloc]initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents *comps = [[NSDateComponents alloc]init];
+    NSInteger unitFlags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitWeekday | NSCalendarUnitHour | NSCalendarUnitMinute;
+    comps = [calendar components:unitFlags fromDate:date];
+    return comps.year;
+}
+
+-(BOOL)dateAIsNoEalierThanDateB:(NSDate *)dateA :(NSDate *)dateB {
+    if ([self yearForDate:dateA] > [self yearForDate:dateB]) {
+        return YES;
+    } else if ([self yearForDate:dateA] == [self yearForDate:dateB]) {
+        if ([self monthForDate:dateA] >= [self monthForDate:dateB]) {
+            return YES;
+        } else {
+            return NO;
+        }
+    } else {
+        return NO;
+    }
+}
 @end
