@@ -10,7 +10,7 @@
 #import "JTCalendar.h"
 #import "JTCalendarMenuMonthView.h"
 
-#define NUMBER_PAGES_LOADED 5 // Must be the same in JTCalendarView, JTCalendarMenuView, JTCalendarContentView
+//#define NUMBER_PAGES_LOADED 5 // Must be the same in JTCalendarView, JTCalendarMenuView, JTCalendarContentView
 
 @interface JTCalendarMenuView(){
     NSMutableArray *monthsViews;
@@ -53,9 +53,18 @@
     self.pagingEnabled = YES;
     self.clipsToBounds = YES;
     
-    for(int i = 0; i < NUMBER_PAGES_LOADED; ++i){
+    for(int i = 0; i < self.calendarManager.numberOfPageLoad; ++i){
         JTCalendarMenuMonthView *monthView = [JTCalendarMenuMonthView new];
                 
+        [self addSubview:monthView];
+        [monthsViews addObject:monthView];
+    }
+}
+
+- (void)initAfterNumberOfPageSet {
+    for(int i = 0; i < self.calendarManager.numberOfPageLoad; ++i){
+        JTCalendarMenuMonthView *monthView = [JTCalendarMenuMonthView new];
+        
         [self addSubview:monthView];
         [monthsViews addObject:monthView];
     }
@@ -94,7 +103,7 @@
         }
     }
     
-    self.contentSize = CGSizeMake(width * NUMBER_PAGES_LOADED, height);
+    self.contentSize = CGSizeMake(width * self.calendarManager.numberOfPageLoad, height);
 }
 
 - (void)setCurrentDate:(NSDate *)currentDate
@@ -104,10 +113,10 @@
     NSCalendar *calendar = self.calendarManager.calendarAppearance.calendar;
     NSDateComponents *dayComponent = [NSDateComponents new];
     
-    for(int i = 0; i < NUMBER_PAGES_LOADED; ++i){
+    for(int i = 0; i < self.calendarManager.numberOfPageLoad; ++i){
         JTCalendarMenuMonthView *monthView = monthsViews[i];
         
-        dayComponent.month = i - 4;
+        dayComponent.month = i - (self.calendarManager.numberOfPageLoad - 1);
         NSDate *monthDate = [calendar dateByAddingComponents:dayComponent toDate:self.currentDate options:0];
         [monthView setCurrentDate:monthDate];
     }
@@ -119,6 +128,7 @@
 {
     self->_calendarManager = calendarManager;
     
+    [self initAfterNumberOfPageSet];
     for(JTCalendarMenuMonthView *view in monthsViews){
         [view setCalendarManager:calendarManager];
     }

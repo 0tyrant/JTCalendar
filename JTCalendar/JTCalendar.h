@@ -29,6 +29,8 @@
 @property (nonatomic, readonly) JTCalendarAppearance *calendarAppearance;
 
 @property (nonatomic, strong) NSDate *leftestDate;
+//default is 5;
+@property (nonatomic, assign)int numberOfPageLoad;
 
 
 - (void)reloadData;

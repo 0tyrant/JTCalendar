@@ -12,7 +12,7 @@
 #import "JTCalendarMonthView.h"
 #import "JTCalendarWeekView.h"
 
-#define NUMBER_PAGES_LOADED 5 // Must be the same in JTCalendarView, JTCalendarMenuView, JTCalendarContentView
+//#define NUMBER_PAGES_LOADED 5 // Must be the same in JTCalendarView, JTCalendarMenuView, JTCalendarContentView
 
 @interface JTCalendarContentView(){
     NSMutableArray *monthsViews;
@@ -55,7 +55,15 @@
     self.pagingEnabled = YES;
     self.clipsToBounds = YES;
     
-    for(int i = 0; i < NUMBER_PAGES_LOADED; ++i){
+    for(int i = 0; i < self.calendarManager.numberOfPageLoad; ++i){
+        JTCalendarMonthView *monthView = [JTCalendarMonthView new];
+        [self addSubview:monthView];
+        [monthsViews addObject:monthView];
+    }
+}
+
+- (void)initAfterNumberOfPageSet {
+    for(int i = 0; i < self.calendarManager.numberOfPageLoad; ++i){
         JTCalendarMonthView *monthView = [JTCalendarMonthView new];
         [self addSubview:monthView];
         [monthsViews addObject:monthView];
@@ -90,7 +98,7 @@
         }
     }
     
-    self.contentSize = CGSizeMake(width * NUMBER_PAGES_LOADED, height);
+    self.contentSize = CGSizeMake(width * self.calendarManager.numberOfPageLoad, height);
 }
 
 - (void)setCurrentDate:(NSDate *)currentDate
@@ -99,20 +107,20 @@
 
     NSCalendar *calendar = self.calendarManager.calendarAppearance.calendar;
     
-    for(int i = 0; i < NUMBER_PAGES_LOADED; ++i){
+    for(int i = 0; i < self.calendarManager.numberOfPageLoad; ++i){
         JTCalendarMonthView *monthView = monthsViews[i];
         
         NSDateComponents *dayComponent = [NSDateComponents new];
         
         if(!self.calendarManager.calendarAppearance.isWeekMode){
-            dayComponent.month = i - 4;
+            dayComponent.month = i - (self.calendarManager.numberOfPageLoad - 1);
          
             NSDate *monthDate = [calendar dateByAddingComponents:dayComponent toDate:self.currentDate options:0];
             monthDate = [self beginningOfMonth:monthDate];
             [monthView setBeginningOfMonth:monthDate];
         }
         else{
-            dayComponent.day = 7 * (i - (NUMBER_PAGES_LOADED / 2));
+            dayComponent.day = 7 * (i - (self.calendarManager.numberOfPageLoad / 2));
             
             NSDate *monthDate = [calendar dateByAddingComponents:dayComponent toDate:self.currentDate options:0];
             monthDate = [self beginningOfWeek:monthDate];
@@ -157,6 +165,7 @@
 {
     self->_calendarManager = calendarManager;
     
+    [self initAfterNumberOfPageSet];
     for(JTCalendarMonthView *view in monthsViews){
         [view setCalendarManager:calendarManager];
     }

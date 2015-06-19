@@ -7,7 +7,7 @@
 
 #import "JTCalendar.h"
 
-#define NUMBER_PAGES_LOADED 5 // Must be the same in JTCalendarView, JTCalendarMenuView, JTCalendarContentView
+//#define NUMBER_PAGES_LOADED 5 // Must be the same in JTCalendarView, JTCalendarMenuView, JTCalendarContentView
 
 @interface JTCalendar(){
     BOOL cacheLastWeekMode;
@@ -30,7 +30,7 @@
     self->_calendarAppearance = [JTCalendarAppearance new];
     self->_dataCache = [JTCalendarDataCache new];
     self.dataCache.calendarManager = self;
-    repositionPage = NUMBER_PAGES_LOADED / 2;
+    repositionPage = self.numberOfPageLoad / 2;
     
     return self;
 }
@@ -160,7 +160,7 @@
     CGFloat fractionalPage = self.contentView.contentOffset.x / pageWidth;
         
     int currentPage = roundf(fractionalPage);
-    if (currentPage == (NUMBER_PAGES_LOADED / 2)){
+    if (currentPage == (self.numberOfPageLoad / 2)){
         if(!self.calendarAppearance.isWeekMode){
             self.menuMonthsView.scrollEnabled = YES;
         }
@@ -175,10 +175,10 @@
     dayComponent.day = 0;
     
     if(!self.calendarAppearance.isWeekMode){
-        dayComponent.month = currentPage - (NUMBER_PAGES_LOADED / 2);
+        dayComponent.month = currentPage - (self.numberOfPageLoad / 2);
     }
     else{
-        dayComponent.day = 7 * (currentPage - (NUMBER_PAGES_LOADED / 2));
+        dayComponent.day = 7 * (currentPage - (self.numberOfPageLoad / 2));
     }
     
     if(self.calendarAppearance.readFromRightToLeft){
@@ -194,7 +194,7 @@
         leftestDayComponent.day = 0;
         NSDate *currentLeftestDate = [calendar dateByAddingComponents:leftestDayComponent toDate:self.leftestDate options: 0];
         if ([self dateAIsNoEalierThanDateB:currentDate :currentLeftestDate]) {
-            repositionPage = NUMBER_PAGES_LOADED / 2;
+            repositionPage = self.numberOfPageLoad / 2;
             [self setCurrentDate:currentDate];
         } else {
             dayComponent.month = 1;
@@ -218,12 +218,12 @@
     }
     self.contentView.scrollEnabled = YES;
     
-    if(currentPage < (NUMBER_PAGES_LOADED / 2)){
+    if(currentPage < (self.numberOfPageLoad / 2)){
         if([self.dataSource respondsToSelector:@selector(calendarDidLoadPreviousPage)]){
             [self.dataSource calendarDidLoadPreviousPage];
         }
     }
-    else if(currentPage > (NUMBER_PAGES_LOADED / 2)){
+    else if(currentPage > (self.numberOfPageLoad / 2)){
         if([self.dataSource respondsToSelector:@selector(calendarDidLoadNextPage)]){
             [self.dataSource calendarDidLoadNextPage];
         }
@@ -243,10 +243,10 @@
 -(void)repositionViewsToToday {
     // Position to the middle page
     CGFloat pageWidth = CGRectGetWidth(self.contentView.frame);
-    self.contentView.contentOffset = CGPointMake(pageWidth * ((NUMBER_PAGES_LOADED-1)), self.contentView.contentOffset.y);
+    self.contentView.contentOffset = CGPointMake(pageWidth * ((self.numberOfPageLoad-1)), self.contentView.contentOffset.y);
     
     CGFloat menuPageWidth = CGRectGetWidth([self.menuMonthsView.subviews.firstObject frame]);
-    self.menuMonthsView.contentOffset = CGPointMake(menuPageWidth * ((NUMBER_PAGES_LOADED -1)), self.menuMonthsView.contentOffset.y);
+    self.menuMonthsView.contentOffset = CGPointMake(menuPageWidth * ((self.numberOfPageLoad -1)), self.menuMonthsView.contentOffset.y);
 }
 
 - (void)loadNextMonth
@@ -264,7 +264,7 @@
     self.menuMonthsView.scrollEnabled = NO;
     
     CGRect frame = self.contentView.frame;
-    frame.origin.x = frame.size.width * ((NUMBER_PAGES_LOADED / 2) + 1);
+    frame.origin.x = frame.size.width * ((self.numberOfPageLoad / 2) + 1);
     frame.origin.y = 0;
     [self.contentView scrollRectToVisible:frame animated:YES];
 }
@@ -274,7 +274,7 @@
     self.menuMonthsView.scrollEnabled = NO;
     
     CGRect frame = self.contentView.frame;
-    frame.origin.x = frame.size.width * ((NUMBER_PAGES_LOADED / 2) - 1);
+    frame.origin.x = frame.size.width * ((self.numberOfPageLoad / 2) - 1);
     frame.origin.y = 0;
     [self.contentView scrollRectToVisible:frame animated:YES];
 }
