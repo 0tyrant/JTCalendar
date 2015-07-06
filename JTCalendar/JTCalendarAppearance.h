@@ -106,6 +106,10 @@ typedef NSString *(^JTCalendarMonthBlock)(NSDate *date, JTCalendar *jt_calendar)
  */
 @property (nonatomic) UIColor *dayCircleColorTodayOtherMonth;
 
+@property (nonatomic) UIColor *dayCircleColorTodayBg;
+
+@property (nonatomic) UIColor *dayCircleColorTodayBgOtherMonth;
+
 /**
  *	The default value of this property is this blue nuance:
  *	@code [UIColor colorWithRed:43./256. green:88./256. blue:1134./256. alpha:1.] @endcode
@@ -203,6 +207,8 @@ typedef NSString *(^JTCalendarMonthBlock)(NSDate *date, JTCalendar *jt_calendar)
  *	The default value of this property is @c 1.0.
  */
 @property (assign, nonatomic) CGFloat dayCircleRatio;
+
+@property (assign, nonatomic) CGFloat todayCircleRatio;
 
 /**
  *	The default value of this property is @c 1.0 / 9.0.
