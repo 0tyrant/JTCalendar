@@ -234,7 +234,8 @@ static NSString *const kJTCalendarDaySelected = @"kJTCalendarDaySelected";
     }
     else if([self isToday]){
         if(!self.isOtherMonth){
-            circleView.color = [self.calendarManager.calendarAppearance dayCircleColorToday];
+            //circleView.color = [self.calendarManager.calendarAppearance dayCircleColorToday];
+            circleView.color = [UIColor clearColor];
             todayCircleBgView.color = [self.calendarManager.calendarAppearance dayCircleColorTodayBg];
             textLabel.textColor = [self.calendarManager.calendarAppearance dayTextColorToday];
             dotView.color = [self.calendarManager.calendarAppearance dayDotColorToday];
