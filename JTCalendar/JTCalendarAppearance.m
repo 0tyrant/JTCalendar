@@ -38,8 +38,8 @@
     self.dayDotRatio = 1. / 9.;
     
     self.menuMonthTextFont = [UIFont systemFontOfSize:17.];
-    self.weekDayTextFont = [UIFont systemFontOfSize:11];
-    self.dayTextFont = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+    self.weekDayTextFont = [UIFont systemFontOfSize:12];
+    self.dayTextFont = [UIFont systemFontOfSize:12];
 
     self.dayFormat = @"dd";
 
