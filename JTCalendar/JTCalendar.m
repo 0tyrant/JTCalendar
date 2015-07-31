@@ -266,7 +266,13 @@
     CGRect frame = self.contentView.frame;
     frame.origin.x = frame.size.width * ((self.numberOfPageLoad / 2) + 1);
     frame.origin.y = 0;
-    [self.contentView scrollRectToVisible:frame animated:YES];
+    //[self.contentView scrollRectToVisible:frame animated:YES];
+    CGPoint contentOffset = self.contentView.contentOffset;
+    contentOffset.x += frame.size.width;
+    if (contentOffset.x >= _contentView.contentSize.width) {
+        return;
+    }
+    [self.contentView setContentOffset:contentOffset animated:YES];
 }
 
 - (void)loadPreviousPage
@@ -276,7 +282,13 @@
     CGRect frame = self.contentView.frame;
     frame.origin.x = frame.size.width * ((self.numberOfPageLoad / 2) - 1);
     frame.origin.y = 0;
-    [self.contentView scrollRectToVisible:frame animated:YES];
+    //[self.contentView scrollRectToVisible:frame animated:YES];
+    CGPoint contentOffset = self.contentView.contentOffset;
+    contentOffset.x -= frame.size.width;
+    if (contentOffset.x >= 0) {
+       [self.contentView setContentOffset:contentOffset animated:YES];
+    }
+    
 }
 
 -(BOOL)isTwoDateInOneMonth:(NSDate *)dateA :(NSDate *)dateB {
