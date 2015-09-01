@@ -166,6 +166,12 @@
         }
         self.contentView.scrollEnabled = YES;
         return;
+    } else if (currentPage == 3 && self.numberOfPageLoad == 5) {
+        if(!self.calendarAppearance.isWeekMode){
+            self.menuMonthsView.scrollEnabled = YES;
+        }
+        self.contentView.scrollEnabled = YES;
+        return;
     }
     
     NSCalendar *calendar = self.calendarAppearance.calendar;
@@ -208,7 +214,7 @@
         dayComponent.month = -1;
         currentDate = [calendar dateByAddingComponents:dayComponent toDate:currentDate options:0];
         if ([self isTwoDateInOneMonth:currentDate :[NSDate date]]) {
-            repositionPage = 3;
+            repositionPage = self.numberOfPageLoad - 1;
             [self setCurrentDate:currentDate];
         }
     }
